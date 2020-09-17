@@ -37,6 +37,7 @@ inject_into_file 'Gemfile', after: 'group :development, :test do' do
   RUBY
 end
 
+gsub_file 'Gemfile', "source 'https://rubygems.org'", "source 'https://gems.ruby-china.com'"
 # gsub_file('Gemfile', /# gem 'redis'/, "gem 'redis'")
 
 # Assets
@@ -60,7 +61,7 @@ gsub_file('config/environments/production.rb', /config\.active_storage\.service.
 run 'cp config/environments/production.rb config/environments/staging.rb'
 
 # Set timezone
-inject_into_file 'config/application.rb', before: "end" do
+inject_into_file 'config/application.rb', after: "config.load_defaults 6.0\n" do
   <<-RUBY
   config.time_zone = 'Beijing'
   config.active_record.default_timezone = :local
@@ -183,6 +184,7 @@ after_bundle do
   inject_into_file file_dir, after: "def change\n" do
     <<~RUBY
     add_column :users, :open_id, :string
+    add_column :users, :session_key, :string
     add_column :users, :avatar, :string
     add_column :users, :nickname, :string
     add_column :users, :phone_number, :string
@@ -222,6 +224,10 @@ after_bundle do
   ########################################
   rails_command 'db:migrate'
   generate('devise:views')
+
+  # generate User serializer
+  generate('serializer', 'User')
+  gsub_file('app/serializers/user_serializer.rb', 'attributes :id', 'attributes :id, :email, :open_id, :session_key, :nickname, :avatar, :gender, :language, :region, :province, :city, :country, :is_admin')
 
   # Environments
   ########################################
