@@ -59,6 +59,14 @@ gsub_file('config/environments/production.rb', /config\.active_storage\.service.
 ########################################
 run 'cp config/environments/production.rb config/environments/staging.rb'
 
+# Set timezone
+inject_into_file 'config/application.rb', before: "end" do
+  <<-RUBY
+  config.time_zone = 'Beijing'
+  config.active_record.default_timezone = :local
+  RUBY
+end
+
 # Layout
 ########################################
 # NEED TO CHECK
@@ -76,36 +84,6 @@ style = <<~HTML
 HTML
 gsub_file('app/views/layouts/application.html.erb', "<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>", style)
 
-# Flashes
-########################################
-# file 'app/views/shared/_flashes.html.erb', <<~HTML
-#   <% if notice %>
-#     <div class="alert alert-info alert-dismissible fade show m-1" role="alert">
-#       <%= notice %>
-#       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-#         <span aria-hidden="true">&times;</span>
-#       </button>
-#     </div>
-#   <% end %>
-#   <% if alert %>
-#     <div class="alert alert-warning alert-dismissible fade show m-1" role="alert">
-#       <%= alert %>
-#       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-#         <span aria-hidden="true">&times;</span>
-#       </button>
-#     </div>
-#   <% end %>
-# HTML
-
-# run 'curl -L https://github.com/lewagon/awesome-navbars/raw/master/templates/_navbar_wagon.html.erb > app/views/shared/_navbar.html.erb'
-
-# inject_into_file 'app/views/layouts/application.html.erb', after: '<body>' do
-#   <<-HTML
-
-#     <%= render 'shared/navbar' %>
-#     <%= render 'shared/flashes' %>
-#   HTML
-# end
 
 # README
 ########################################
@@ -204,17 +182,17 @@ after_bundle do
 
   inject_into_file file_dir, after: "def change\n" do
     <<~RUBY
-      add_column :users, :open_id, :string
-      add_column :users, :avatar, :string
-      add_column :users, :nickname, :string
-      add_column :users, :phone_number, :string
-      add_column :users, :language, :string
-      add_column :users, :gender, :string
-      add_column :users, :city, :string
-      add_column :users, :province, :string
-      add_column :users, :region, :string
-      add_column :users, :country, :string
-      add_column :users, :is_admin, :boolean, default: false
+    add_column :users, :open_id, :string
+    add_column :users, :avatar, :string
+    add_column :users, :nickname, :string
+    add_column :users, :phone_number, :string
+    add_column :users, :language, :string
+    add_column :users, :gender, :string
+    add_column :users, :city, :string
+    add_column :users, :province, :string
+    add_column :users, :region, :string
+    add_column :users, :country, :string
+    add_column :users, :is_admin, :boolean, default: false
     RUBY
   end
 
@@ -232,22 +210,18 @@ after_bundle do
   run 'mkdir app/controllers/api/v1'
   run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/base_controller.rb > app/controllers/api/v1/base_controller.rb'
 
+  # User Sessions & Users controller
+  run 'curl -L https://github.com/brainchild-tech/rails-templates/blob/master/files/user_sessions_controller.rb > app/controllers/api/v1/user_sessions_controller.rb'
+  run 'curl -L https://github.com/brainchild-tech/rails-templates/blob/master/files/users_controller.rb > app/controllers/api/v1/users_controller.rb'
+
+  # Replace application_record
+  run 'rm app/models/application_record.rb'
+  run 'curl -L https://github.com/brainchild-tech/rails-templates/blob/master/files/application_record.rb > app/models/application_record.rb'
+
   # migrate + devise views
   ########################################
   rails_command 'db:migrate'
   generate('devise:views')
-
-  # Pages Controller
-  ########################################
-  # run 'rm app/controllers/pages_controller.rb'
-  # file 'app/controllers/pages_controller.rb', <<~RUBY
-  #   class PagesController < ApplicationController
-  #     skip_before_action :authenticate_user!, only: [ :home ]
-
-  #     def home
-  #     end
-  #   end
-  # RUBY
 
   # Environments
   ########################################
@@ -257,42 +231,25 @@ after_bundle do
 
   # Webpacker / Yarn
   ########################################
+  run 'mkdir app/javascript/stylesheets'
   # run 'yarn add popper.js jquery bootstrap'
+
+  # Tailwindcss configs
+  run 'yarn add tailwindcss'
+  # run 'npx tailwindcss init app/javascript/stylesheets/tailwind.config.js --full'
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/tailwind.config.js > app/javascript/stylesheets/tailwind.config.js'
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/application.scss > app/javascript/stylesheets/application.scss'
+
+  # add tailwind into postcss plugin
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/postcss.config.js > postcss.config.js'
+
   append_file 'app/javascript/packs/application.js', <<~JS
-
-
-    // ----------------------------------------------------
-    // Note(lewagon): ABOVE IS RAILS DEFAULT CONFIGURATION
-    // WRITE YOUR OWN JS STARTING FROM HERE 👇
-    // ----------------------------------------------------
-
-    // External imports
-    // import "bootstrap";
-
-    // Internal imports, e.g:
-    // import { initSelect2 } from '../components/init_select2';
-
-    document.addEventListener('turbolinks:load', () => {
+    require("../stylesheets/application.scss");
+    // document.addEventListener('turbolinks:load', () => {
       // Call your functions here, e.g:
       // initSelect2();
-    });
+    // });
   JS
-
-  inject_into_file 'config/webpack/environment.js', before: 'module.exports' do
-    <<~JS
-      const webpack = require('webpack');
-      // Preventing Babel from transpiling NodeModules packages
-      environment.loaders.delete('nodeModules');
-      // Bootstrap 4 has a dependency over jQuery & Popper.js:
-      environment.plugins.prepend('Provide',
-        new webpack.ProvidePlugin({
-          $: 'jquery',
-          jQuery: 'jquery',
-          Popper: ['popper.js', 'default']
-        })
-      );
-    JS
-  end
 
   # Dotenv
   ########################################
@@ -300,17 +257,33 @@ after_bundle do
 
   # Rubocop
   ########################################
-  run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml'
+  # run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml'
 
   # Git
   ########################################
-  git add: '.'
-  git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
+  # git add: '.'
+  # git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
 
   # Fix puma config
   gsub_file('config/puma.rb', 'pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }', '# pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }')
 
   # DOCKERFILE, PROCFILE, APP.JSON
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/Dockerfile > Dockerfile'
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/Procfile > Procfile'
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/app.json > app.json'
 
+  # Add Aliyun to config/storage.yml
+  inject_into_file 'config/storage.yml' do
+    <<~YAML
+    aliyun:
+      service: Aliyun
+      access_key_id: <%= Rails.application.credentials.dig(:aliyun, :access_key_id) %>
+      access_key_secret: <%= Rails.application.credentials.dig(:aliyun, :access_key_secret) %>
+      bucket: <%= Rails.application.credentials.dig(:aliyun, :bucket) %>
+      endpoint: <%= Rails.application.credentials.dig(:aliyun, :endpoint) %>
+      path: "/"
+      mode: public
+    YAML
+  end
 
 end
