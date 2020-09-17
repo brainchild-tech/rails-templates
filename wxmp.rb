@@ -174,28 +174,7 @@ after_bundle do
 
   # WeChat User Attributes
   ########################################
-  generate('migration AddBasicColumnsToUsers')
-  dir = 'db/migrate'
-  migration_files_array = Dir.entries(dir)
-  file = migration_files_array.find {|f| f.match('add_basic_column_to_users.rb')}
-  file_dir = "#{dir}/#{file}"
-
-  inject_into_file file_dir, after: "def change\n" do
-    <<~RUBY
-      add_column :users, :open_id, :string
-      add_column :users, :session_key, :string
-      add_column :users, :avatar, :string
-      add_column :users, :nickname, :string
-      add_column :users, :phone_number, :string
-      add_column :users, :language, :string
-      add_column :users, :gender, :string
-      add_column :users, :city, :string
-      add_column :users, :province, :string
-      add_column :users, :region, :string
-      add_column :users, :country, :string
-      add_column :users, :is_admin, :boolean, default: false
-    RUBY
-  end
+  generate('migration AddBasicColumnsToUsers open_id session_key avatar nickname phone_number language gender city province region country is_admin:boolean')
 
   # App controller
   ########################################
