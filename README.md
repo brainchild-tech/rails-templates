@@ -1,4 +1,6 @@
 ## README
+
+### For WeChat MP
 `rails new YOUR_APP_NAME --database=postgresql -m https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/wxmp.rb`
 
 * Gemfile source ruby-china.com
@@ -10,3 +12,7 @@
 * Custom user sessions for WXMP login
 
 * Active Model Serializer
+
+* Tailwindcss
+
+* Dockerfile, Procfile, app.json
