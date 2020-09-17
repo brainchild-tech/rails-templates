@@ -14,6 +14,8 @@
 
 * Active Model Serializer
 
+* Dockerfile, Procfile, app.json
+
 * Sidekiq & redis ready
 
 ### With web view (admin etc.)
@@ -21,8 +23,6 @@
 `rails new YOUR_APP_NAME --database=postgresql -m https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/wxmp.rb`
 
 * Tailwindcss
-
-* Dockerfile, Procfile, app.json
 
 * Rails Admin ready
 
