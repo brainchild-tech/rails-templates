@@ -168,7 +168,7 @@ after_bundle do
   inject_into_file 'app/models/user.rb', before: "end" do
     # "has_many :authentication_tokens\n"
     <<~RUBY
-    has_many :authentication_tokens
+      has_many :authentication_tokens
     RUBY
   end
 
@@ -177,23 +177,23 @@ after_bundle do
   generate('migration AddBasicColumnsToUsers')
   dir = 'db/migrate'
   migration_files_array = Dir.entries(dir)
-  file = migration_files_array.find {|f| f.match('add_basic_column_to_users')}
+  file = migration_files_array.find {|f| f.match('add_basic_column_to_users.rb')}
   file_dir = "#{dir}/#{file}"
 
   inject_into_file file_dir, after: "def change\n" do
     <<~RUBY
-    add_column :users, :open_id, :string
-    add_column :users, :session_key, :string
-    add_column :users, :avatar, :string
-    add_column :users, :nickname, :string
-    add_column :users, :phone_number, :string
-    add_column :users, :language, :string
-    add_column :users, :gender, :string
-    add_column :users, :city, :string
-    add_column :users, :province, :string
-    add_column :users, :region, :string
-    add_column :users, :country, :string
-    add_column :users, :is_admin, :boolean, default: false
+      add_column :users, :open_id, :string
+      add_column :users, :session_key, :string
+      add_column :users, :avatar, :string
+      add_column :users, :nickname, :string
+      add_column :users, :phone_number, :string
+      add_column :users, :language, :string
+      add_column :users, :gender, :string
+      add_column :users, :city, :string
+      add_column :users, :province, :string
+      add_column :users, :region, :string
+      add_column :users, :country, :string
+      add_column :users, :is_admin, :boolean, default: false
     RUBY
   end
 
