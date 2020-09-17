@@ -16,3 +16,7 @@
 * Tailwindcss
 
 * Dockerfile, Procfile, app.json
+
+* Rails Admin ready
+
+* Sidekiq & redis ready
