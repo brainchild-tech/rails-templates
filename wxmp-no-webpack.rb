@@ -39,9 +39,9 @@ end
 
 gsub_file 'Gemfile', "source 'https://rubygems.org'", "source 'https://gems.ruby-china.com'"
 # gsub_file('Gemfile', /# gem 'redis'/, "gem 'redis'")
-gsub_file('Gemfile', /gem 'jbuilder'/, "# gem 'jbuilder'")
-gsub_file('Gemfile', /gem 'webpacker'/, "# gem 'webpacker'")
-gsub_file('Gemfile', /gem 'turbolinks'/, "# gem 'turbolinks'")
+gsub_file 'Gemfile', "gem 'jbuilder'", "# gem 'jbuilder'"
+gsub_file 'Gemfile', "gem 'webpacker'", "# gem 'webpacker'"
+gsub_file 'Gemfile', "gem 'turbolinks'", "# gem 'turbolinks'"
 
 # Dev environment
 ########################################
