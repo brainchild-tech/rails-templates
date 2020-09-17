@@ -2,7 +2,7 @@
 
 ### For WeChat MP
 
-`rails new YOUR_APP_NAME --database=postgresql -m https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/wxmp-no-webpack.rb`
+`rails new YOUR_APP_NAME --database=postgresql --skip-webpack-install -m https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/wxmp-no-web.rb`
 
 * Gemfile source ruby-china.com
 

@@ -64,7 +64,7 @@ inject_into_file 'config/application.rb', after: "config.load_defaults 6.0\n" do
   RUBY
 end
 
-README
+# README
 #######################################
 markdown_file_content = <<-MARKDOWN
 Rails app generated with [brainchild-tech/rails-templates](https://github.com/brainchild-tech/rails-templates).
