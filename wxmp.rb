@@ -227,6 +227,11 @@ after_bundle do
     end
   RUBY
 
+  # Base controller
+  run 'mkdir app/controllers/api'
+  run 'mkdir app/controllers/api/v1'
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/base_controller.rb > app/controllers/api/v1/base_controller.rb'
+
   # migrate + devise views
   ########################################
   rails_command 'db:migrate'
@@ -306,4 +311,6 @@ after_bundle do
   gsub_file('config/puma.rb', 'pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }', '# pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }')
 
   # DOCKERFILE, PROCFILE, APP.JSON
+
+
 end
