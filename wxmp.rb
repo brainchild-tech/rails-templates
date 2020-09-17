@@ -198,9 +198,8 @@ after_bundle do
   run 'rm app/models/application_record.rb'
   run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/application_record.rb > app/models/application_record.rb'
 
-  # migrate + devise views
+  # devise views
   ########################################
-  rails_command 'db:migrate'
   generate('devise:views')
 
   # generate User serializer
@@ -256,8 +255,11 @@ after_bundle do
   run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/Procfile > Procfile'
   run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/app.json > app.json'
 
+  # Active Storage & Aliyun
+  rails_command('active_storage:install')
+
   # Add Aliyun to config/storage.yml
-  inject_into_file 'config/storage.yml' do
+  inject_into_file 'config/storage.yml', before: 'test:' do
     <<~YAML
     aliyun:
       service: Aliyun
@@ -270,4 +272,6 @@ after_bundle do
     YAML
   end
 
+  # migrate
+  rails_command 'db:migrate'
 end
