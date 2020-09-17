@@ -166,7 +166,10 @@ after_bundle do
   end
 
   inject_into_file 'app/models/user.rb', before: "end" do
-    "has_many :authentication_tokens"
+    # "has_many :authentication_tokens\n"
+    <<~RUBY
+    has_many :authentication_tokens
+    RUBY
   end
 
   # WeChat User Attributes
