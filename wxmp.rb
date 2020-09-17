@@ -63,8 +63,8 @@ run 'cp config/environments/production.rb config/environments/staging.rb'
 # Set timezone
 inject_into_file 'config/application.rb', after: "config.load_defaults 6.0\n" do
   <<-RUBY
-  config.time_zone = 'Beijing'
-  config.active_record.default_timezone = :local
+    config.time_zone = 'Beijing'
+    config.active_record.default_timezone = :local
   RUBY
 end
 
@@ -95,15 +95,15 @@ gsub_file('app/views/layouts/application.html.erb', "<%= stylesheet_link_tag 'ap
 
 # Generators
 ########################################
-generators = <<~RUBY
-  config.generators do |generate|
-    generate.assets false
-    generate.helper false
-    generate.test_framework :test_unit, fixture: false
-  end
-RUBY
+# generators = <<~RUBY
+#   config.generators do |generate|
+#     generate.assets false
+#     generate.helper false
+#     generate.test_framework :test_unit, fixture: false
+#   end
+# RUBY
 
-environment generators
+# environment generators
 
 ########################################
 # AFTER BUNDLE
@@ -191,12 +191,12 @@ after_bundle do
   run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/base_controller.rb > app/controllers/api/v1/base_controller.rb'
 
   # User Sessions & Users controller
-  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/blob/master/files/user_sessions_controller.rb > app/controllers/api/v1/user_sessions_controller.rb'
-  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/blob/master/files/users_controller.rb > app/controllers/api/v1/users_controller.rb'
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/user_sessions_controller.rb > app/controllers/api/v1/user_sessions_controller.rb'
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/users_controller.rb > app/controllers/api/v1/users_controller.rb'
 
   # Replace application_record
   run 'rm app/models/application_record.rb'
-  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/blob/master/files/application_record.rb > app/models/application_record.rb'
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/application_record.rb > app/models/application_record.rb'
 
   # migrate + devise views
   ########################################
