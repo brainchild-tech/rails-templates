@@ -40,6 +40,8 @@ end
 gsub_file 'Gemfile', "source 'https://rubygems.org'", "source 'https://gems.ruby-china.com'"
 # gsub_file('Gemfile', /# gem 'redis'/, "gem 'redis'")
 gsub_file ('Gemfile', /gem 'jbuilder'/, "# gem 'jbuilder'")
+gsub_file ('Gemfile', /gem 'webpacker'/, "# gem 'webpacker'")
+gsub_file ('Gemfile', /gem 'turbolinks'/, "# gem 'turbolinks'")
 
 # Dev environment
 ########################################
@@ -62,16 +64,7 @@ inject_into_file 'config/application.rb', after: "config.load_defaults 6.0\n" do
   RUBY
 end
 
-# Layout -- this is only for Rails 6 +
-########################################
-inject_into_file 'app/views/layouts/application.html.erb', before: "</head>" do
-  <<~HTML
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-HTML
-end
-
-# README
+README
 #######################################
 markdown_file_content = <<-MARKDOWN
 Rails app generated with [brainchild-tech/rails-templates](https://github.com/brainchild-tech/rails-templates).
@@ -89,7 +82,6 @@ after_bundle do
   # Generators: db + simple form + pages controller
   ########################################
   rails_command 'db:drop db:create db:migrate'
-  # generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
 
   # Routes
   ########################################
@@ -134,6 +126,7 @@ after_bundle do
   end
 
   inject_into_file 'app/models/user.rb', before: "end" do
+    # "has_many :authentication_tokens\n"
     <<~RUBY
       has_many :authentication_tokens
     RUBY
@@ -165,10 +158,6 @@ after_bundle do
   run 'rm app/models/application_record.rb'
   run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/application_record.rb > app/models/application_record.rb'
 
-  # devise views
-  ########################################
-  generate('devise:views')
-
   # generate User serializer
   generate('serializer', 'User')
   gsub_file('app/serializers/user_serializer.rb', 'attributes :id', 'attributes :id, :email, :open_id, :session_key, :nickname, :avatar, :gender, :language, :region, :province, :city, :country, :is_admin')
@@ -179,40 +168,9 @@ after_bundle do
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'production'
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'staging'
 
-  # Webpacker / Yarn
-  ########################################
-  run 'mkdir app/javascript/stylesheets'
-  # run 'yarn add popper.js jquery bootstrap'
-
-  # Tailwindcss configs
-  run 'yarn add tailwindcss'
-  # run 'npx tailwindcss init app/javascript/stylesheets/tailwind.config.js --full'
-  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/tailwind.config.js > app/javascript/stylesheets/tailwind.config.js'
-  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/application.scss > app/javascript/stylesheets/application.scss'
-
-  # add tailwind into postcss plugin
-  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/postcss.config.js > postcss.config.js'
-
-  append_file 'app/javascript/packs/application.js', <<~JS
-    require("../stylesheets/application.scss");
-    // document.addEventListener('turbolinks:load', () => {
-      // Call your functions here, e.g:
-      // initSelect2();
-    // });
-  JS
-
   # Dotenv
   ########################################
   run 'touch .env'
-
-  # Rubocop
-  ########################################
-  # run 'curl -L https://raw.githubusercontent.com/lewagon/rails-templates/master/.rubocop.yml > .rubocop.yml'
-
-  # Git
-  ########################################
-  # git add: '.'
-  # git commit: "-m 'Initial commit with devise template from https://github.com/lewagon/rails-templates'"
 
   # Fix puma config
   gsub_file('config/puma.rb', 'pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }', '# pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }')

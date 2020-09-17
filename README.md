@@ -1,7 +1,8 @@
 ## README
 
 ### For WeChat MP
-`rails new YOUR_APP_NAME --database=postgresql -m https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/wxmp.rb`
+
+`rails new YOUR_APP_NAME --database=postgresql -m https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/wxmp-no-webpack.rb`
 
 * Gemfile source ruby-china.com
 
@@ -13,10 +14,15 @@
 
 * Active Model Serializer
 
+* Sidekiq & redis ready
+
+### With web view (admin etc.)
+
+`rails new YOUR_APP_NAME --database=postgresql -m https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/wxmp.rb`
+
 * Tailwindcss
 
 * Dockerfile, Procfile, app.json
 
 * Rails Admin ready
 
-* Sidekiq & redis ready
