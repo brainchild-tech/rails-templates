@@ -1,4 +1,5 @@
 class Api::V1::BaseController < ActionController::Base
+  serialization_scope :view_context
   # protect_from_forgery with: :exception
   skip_before_action :verify_authenticity_token
   before_action :set_locale
