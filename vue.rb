@@ -142,7 +142,7 @@ after_bundle do
 
   # WeChat User Attributes
   ########################################
-  generate('migration AddBasicColumnsToUsers open_id session_key avatar nickname phone_number language gender city province region country is_admin:boolean')
+  # generate('migration AddBasicColumnsToUsers open_id session_key avatar nickname phone_number language gender city province region country is_admin:boolean')
 
   # App controller
   ########################################
@@ -172,7 +172,7 @@ after_bundle do
 
   # generate User serializer
   generate('serializer', 'User')
-  gsub_file('app/serializers/user_serializer.rb', 'attributes :id', 'attributes :id, :email, :open_id, :session_key, :nickname, :avatar, :gender, :language, :region, :province, :city, :country, :is_admin')
+  # gsub_file('app/serializers/user_serializer.rb', 'attributes :id', 'attributes :id, :email, :open_id, :session_key, :nickname, :avatar, :gender, :language, :region, :province, :city, :country, :is_admin')
 
   # generate Cancancan
   generate('cancan:ability')

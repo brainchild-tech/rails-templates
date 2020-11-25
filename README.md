@@ -18,11 +18,15 @@
 
 * Sidekiq & redis ready
 
-### With web view (admin etc.)
+### With webpack
 
 `rails new YOUR_APP_NAME --database=postgresql -m https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/wxmp.rb`
 
-* Tailwindcss
+### With web view (admin etc.) + Tailwind
+
+`rails new YOUR_APP_NAME --database=postgresql -m https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/wxmp-tailwind.rb`
+
+* Tailwindcss v. 1.9.6
 
 * Rails Admin ready
 

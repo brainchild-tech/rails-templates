@@ -181,7 +181,26 @@ after_bundle do
 
   # Webpacker / Yarn
   ########################################
+  run 'mkdir app/javascript/stylesheets'
+  # run 'yarn add popper.js jquery bootstrap'
 
+  # Tailwindcss configs
+  # run 'yarn add tailwindcss'
+  run 'yarn add tailwindcss@1.9.6'
+  # run 'npx tailwindcss init app/javascript/stylesheets/tailwind.config.js --full'
+  # run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/tailwind.config.js > app/javascript/stylesheets/tailwind.config.js'
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/application.scss > app/javascript/stylesheets/application.scss'
+
+  # add tailwind into postcss plugin
+  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/postcss.config.js > postcss.config.js'
+
+  append_file 'app/javascript/packs/application.js', <<~JS
+    require("../stylesheets/application.scss");
+    // document.addEventListener('turbolinks:load', () => {
+      // Call your functions here, e.g:
+      // initSelect2();
+    // });
+  JS
 
   # Dotenv
   ########################################
