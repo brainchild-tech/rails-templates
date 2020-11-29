@@ -7,11 +7,11 @@ inject_into_file 'Gemfile', before: 'group :development, :test do' do
     # gem 'sidekiq', '~> 6.1'
     gem 'devise'
     gem 'tiddle'
-    gem 'cancancan'
+    # gem 'cancancan'
     gem 'active_model_serializers', '~> 0.10.0'
-    gem 'activestorage-aliyun'
+    # gem 'activestorage-aliyun'
     gem 'rest-client'
-    gem 'rails-i18n'
+    # gem 'rails-i18n'
 
     # for rails admin
     # gem 'mini_magick'
@@ -38,30 +38,30 @@ inject_into_file 'Gemfile', after: 'group :development, :test do' do
   RUBY
 end
 
-gsub_file 'Gemfile', "source 'https://rubygems.org'", "source 'https://gems.ruby-china.com'"
+# gsub_file 'Gemfile', "source 'https://rubygems.org'", "source 'https://gems.ruby-china.com'"
 # gsub_file('Gemfile', /# gem 'redis'/, "gem 'redis'")
 gsub_file('Gemfile', /gem 'jbuilder'/, "# gem 'jbuilder'")
 
 # Dev environment
 ########################################
 # gsub_file('config/environments/development.rb', /config\.assets\.debug.*/, 'config.assets.debug = false')
-gsub_file('config/environments/development.rb', /config\.active_storage\.service.*/, 'config.active_storage.service = :aliyun')
+# gsub_file('config/environments/development.rb', /config\.active_storage\.service.*/, 'config.active_storage.service = :aliyun')
 
 # Production environment
 ########################################
-gsub_file('config/environments/production.rb', /config\.active_storage\.service.*/, 'config.active_storage.service = :aliyun')
+# gsub_file('config/environments/production.rb', /config\.active_storage\.service.*/, 'config.active_storage.service = :aliyun')
 
 # Staging environment
 ########################################
-run 'cp config/environments/production.rb config/environments/staging.rb'
+# run 'cp config/environments/production.rb config/environments/staging.rb'
 
-# Set timezone
-inject_into_file 'config/application.rb', after: "config.load_defaults 6.0\n" do
-  <<-RUBY
-    config.time_zone = 'Beijing'
-    config.active_record.default_timezone = :local
-  RUBY
-end
+# # Set timezone
+# inject_into_file 'config/application.rb', after: "config.load_defaults 6.0\n" do
+#   <<-RUBY
+#     config.time_zone = 'Beijing'
+#     config.active_record.default_timezone = :local
+#   RUBY
+# end
 
 # Layout -- this is only for Rails 6 +
 ########################################
@@ -90,26 +90,27 @@ after_bundle do
   # Generators: db + simple form + pages controller
   ########################################
   rails_command 'db:drop db:create db:migrate'
-  # generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
+  generate(:controller, 'pages', 'home', '--skip-routes', '--no-test-framework')
 
   # Routes
   ########################################
   route <<~RUBY
-  scope "(:locale)", locale: /en|cn/ do
-    namespace :api, defaults: { format: :json } do
-      namespace :v1 do
-        # Devise routes for API clients (custom sessions controller)
-        devise_scope :user do
-          post 'login', to: 'user_sessions#create', as: 'login'
-          post 'manual_login', to: "user_sessions#manual_create"
-        end
-        get 'users/:id', to: "users#show"
-        put 'users/update', to: 'users#update'
-        # put 'users/update-phone', to: 'user_sessions#update_phone'
-        # put 'users/admin-register', to: 'user_sessions#admin_register'
-      end
-    end
-  end
+    root to: 'pages#home'
+    # scope "(:locale)", locale: /en|cn/ do
+    #   namespace :api, defaults: { format: :json } do
+    #     namespace :v1 do
+    #       # Devise routes for API clients (custom sessions controller)
+    #       devise_scope :user do
+    #         post 'login', to: 'user_sessions#create', as: 'login'
+    #         post 'manual_login', to: "user_sessions#manual_create"
+    #       end
+    #       get 'users/:id', to: "users#show"
+    #       put 'users/update', to: 'users#update'
+    #       # put 'users/update-phone', to: 'user_sessions#update_phone'
+    #       # put 'users/admin-register', to: 'user_sessions#admin_register'
+    #     end
+    #   end
+    # end
   RUBY
 
   # Git ignore
@@ -158,9 +159,9 @@ after_bundle do
   run 'mkdir app/controllers/api/v1'
   run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/base_controller.rb > app/controllers/api/v1/base_controller.rb'
 
-  # User Sessions & Users controller
-  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/user_sessions_controller.rb > app/controllers/api/v1/user_sessions_controller.rb'
-  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/users_controller.rb > app/controllers/api/v1/users_controller.rb'
+  # # User Sessions & Users controller
+  # run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/user_sessions_controller.rb > app/controllers/api/v1/user_sessions_controller.rb'
+  # run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/users_controller.rb > app/controllers/api/v1/users_controller.rb'
 
   # Replace application_record
   run 'rm app/models/application_record.rb'
@@ -171,17 +172,17 @@ after_bundle do
   generate('devise:views')
 
   # generate User serializer
-  generate('serializer', 'User')
+  # generate('serializer', 'User')
   # gsub_file('app/serializers/user_serializer.rb', 'attributes :id', 'attributes :id, :email, :open_id, :session_key, :nickname, :avatar, :gender, :language, :region, :province, :city, :country, :is_admin')
 
   # generate Cancancan
-  generate('cancan:ability')
+  # generate('cancan:ability')
 
   # Environments
   ########################################
   environment 'config.action_mailer.default_url_options = { host: "http://localhost:3000" }', env: 'development'
   environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'production'
-  environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'staging'
+  # environment 'config.action_mailer.default_url_options = { host: "http://TODO_PUT_YOUR_DOMAIN_HERE" }', env: 'staging'
 
   # Webpacker / Yarn
   ########################################
@@ -189,9 +190,11 @@ after_bundle do
   # run 'yarn add popper.js jquery bootstrap'
 
   # Tailwindcss configs
-  run 'yarn add tailwindcss'
+  run 'yarn add tailwindcss@1.9.6'
+
+  # uncomment this when you want to generate Tailwindcss full config file
   # run 'npx tailwindcss init app/javascript/stylesheets/tailwind.config.js --full'
-  run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/tailwind.config.js > app/javascript/stylesheets/tailwind.config.js'
+
   run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/application.scss > app/javascript/stylesheets/application.scss'
 
   # add tailwind into postcss plugin
@@ -230,18 +233,18 @@ after_bundle do
   rails_command('active_storage:install')
 
   # Add Aliyun to config/storage.yml
-  inject_into_file 'config/storage.yml', before: 'test:' do
-    <<~YAML
-    aliyun:
-      service: Aliyun
-      access_key_id: <%= Rails.application.credentials.dig(:aliyun, :access_key_id) %>
-      access_key_secret: <%= Rails.application.credentials.dig(:aliyun, :access_key_secret) %>
-      bucket: <%= Rails.application.credentials.dig(:aliyun, :bucket) %>
-      endpoint: <%= Rails.application.credentials.dig(:aliyun, :endpoint) %>
-      path: "/"
-      mode: public
-    YAML
-  end
+  # inject_into_file 'config/storage.yml', before: 'test:' do
+  #   <<~YAML
+  #   aliyun:
+  #     service: Aliyun
+  #     access_key_id: <%= Rails.application.credentials.dig(:aliyun, :access_key_id) %>
+  #     access_key_secret: <%= Rails.application.credentials.dig(:aliyun, :access_key_secret) %>
+  #     bucket: <%= Rails.application.credentials.dig(:aliyun, :bucket) %>
+  #     endpoint: <%= Rails.application.credentials.dig(:aliyun, :endpoint) %>
+  #     path: "/"
+  #     mode: public
+  #   YAML
+  # end
 
   # migrate
   rails_command 'db:migrate'

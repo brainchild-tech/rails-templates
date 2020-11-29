@@ -184,11 +184,11 @@ after_bundle do
   run 'mkdir app/javascript/stylesheets'
   # run 'yarn add popper.js jquery bootstrap'
 
-  # Tailwindcss configs
-  # run 'yarn add tailwindcss'
+  # Tailwindcss configs - using 1.9.6 until postcss and node compatibility issue is fixed.
   run 'yarn add tailwindcss@1.9.6'
+
+  # uncomment this when you want to generate Tailwindcss full config file
   # run 'npx tailwindcss init app/javascript/stylesheets/tailwind.config.js --full'
-  # run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/tailwind.config.js > app/javascript/stylesheets/tailwind.config.js'
   run 'curl -L https://raw.githubusercontent.com/brainchild-tech/rails-templates/master/files/application.scss > app/javascript/stylesheets/application.scss'
 
   # add tailwind into postcss plugin
