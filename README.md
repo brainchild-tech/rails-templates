@@ -30,6 +30,22 @@
 
 * Rails Admin ready
 
+## For Rails Web App with Tailwindcss
+
+`rails new YOUR_APP_NAME -T --database=postgresql -m ~/code/brainchild/rails-templates/web-tailwind.rb`
+
+* Tailwindcss v. 1.9.6
+
+* Rails Admin ready
+
+* Active storage installed, but storage service not yet configured
+
+* Devise installed
+
+* Active model serializer installed
+
+* Cancancan an option, not yet installed/generated
+
 
 ## For Rails Web App with Vue.js
 
